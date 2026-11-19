@@ -117,7 +117,7 @@ void Refinery::assignHarvester(Harvester* newHarvester) {
 }
 
 void Refinery::deployHarvester(const GameContext& context, Carryall* pCarryall) {
-    unBook();
+    // The booking made for the carryall that came here is released by Carryall::setTarget(), on every path below.
     drawnAngle_     = static_cast<ANGLETYPE>(0);
     extractingSpice = false;
 
@@ -134,6 +134,10 @@ void Refinery::deployHarvester(const GameContext& context, Carryall* pCarryall) 
             pCarryall->setTarget(nullptr);
             pCarryall->setDestination(pHarvester->getGuardPoint());
         } else {
+            // The harvester leaves by itself: a carryall that came for it must not stay targeting this refinery.
+            if (pCarryall != nullptr)
+                pCarryall->setTarget(nullptr);
+
             const auto deployPos =
                 dune::globals::currentGameMap->findDeploySpot(pHarvester, location_, destination_, getStructureSize());
 
@@ -143,8 +147,12 @@ void Refinery::deployHarvester(const GameContext& context, Carryall* pCarryall) 
             } else
                 pHarvester->deploy(context, deployPos);
         }
-    } else
+    } else {
         sdl2::log_error("A refinery is trying to deploy a non-existent harvester!");
+
+        if (pCarryall != nullptr)
+            pCarryall->setTarget(nullptr);
+    }
 
     if (bookings == 0)
         stopAnimate();
