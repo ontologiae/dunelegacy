@@ -143,10 +143,9 @@ void StarPort::handleCancelOrderClick() {
 bool StarPort::isUnitLimitReachedFor(ItemID_enum itemID, int pendingOrders) const {
     // Each queued order becomes one unit (or three infantry, counted as one) when delivered, but it is not
     // yet part of the house's unit count, so it is passed as an extra count. The limit of the factory that would
-    // build the unit applies. Flying units are not checked here, as they were not before: they keep the behaviour
-    // of the base branch.
+    // build the unit applies.
     if (isFlyingUnit(itemID)) {
-        return false;
+        return owner_->isAirUnitLimitReached(pendingOrders);
     }
     if (isInfantryUnit(itemID)) {
         return owner_->isInfantryUnitLimitReached(pendingOrders);

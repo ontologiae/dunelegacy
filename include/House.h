@@ -134,10 +134,12 @@ public:
     [[nodiscard]] bool isInfantryUnitLimitReached(int extraUnits = 0) const;
 
     /**
-        This function checks if the limit for air units is already reached.
+        This function checks if the limit for air units is already reached. Flying units have no limit of their own:
+        every unit counts once against the global unit limit (MaxUnits).
+        \param extraUnits number of units already committed but not yet created (e.g. queued at a starport)
         \return true, if the limit is already reached, false if building further air units is allowed
     */
-    [[nodiscard]] bool isAirUnitLimitReached() const;
+    [[nodiscard]] bool isAirUnitLimitReached(int extraUnits = 0) const;
 
     Choam& getChoam() { return choam_; }
     [[nodiscard]] const Choam& getChoam() const { return choam_; }

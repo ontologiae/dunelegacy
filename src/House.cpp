@@ -207,8 +207,9 @@ bool House::isInfantryUnitLimitReached(int extraUnits) const {
     return (numGroundUnit + numItem_[Unit_Soldier] / 3 + numItem_[Unit_Trooper] / 3 + extraUnits >= maxUnits_);
 }
 
-bool House::isAirUnitLimitReached() const {
-    return (numItem_[Unit_Carryall] + numItem_[Unit_Ornithopter] >= 11 * std::max(maxUnits_, 25) / 25);
+bool House::isAirUnitLimitReached(int extraUnits) const {
+    // Flying units have no limit of their own: they are limited only by the global number of units (MaxUnits).
+    return (numUnits_ + extraUnits >= maxUnits_);
 }
 
 void House::addCredits(FixPoint newCredits, bool wasRefined) {
